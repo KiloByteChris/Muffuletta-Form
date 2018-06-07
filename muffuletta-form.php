@@ -1,9 +1,9 @@
 <?php
 /*
-Plugin Name: My First Widget
-Plugin URI: http://clark.edu
-Description: My Awesome widget
-Author: Bruce
+Plugin Name: Muffuletta Form
+Plugin URI: http://new-volume.edu
+Description: A contact form for the Muffuletta theme
+Author: chris@new-volume.com
 Version: 1.0
 */
 // Block direct requests
@@ -15,22 +15,22 @@ if ( !defined('ABSPATH') )
 // See Codex https://codex.wordpress.org/Function_Reference/register_widget
 // Takes a class as a parameter
 add_action( 'widgets_init', function(){
-     register_widget( 'My_Widget' );
+     register_widget( 'Muffuletta_Form' );
 });
 /**
  * Adds My_Widget widget.
  */
-// Codex: https://developer.wordpress.org/reference/classes/wp_widget/
-class My_Widget extends WP_Widget {
+	// Codex: https://developer.wordpress.org/reference/classes/wp_widget/
+class Muffuletta_Form extends WP_Widget {
 	/**
 	 * Register widget with WordPress.
 	 */
 	// Class constructor
 	function __construct() {
 		parent::__construct(
-			'My_Widget', // Base ID
-			__('My Widget', 'text_domain'), // Name
-			array( 'description' => __( 'My Awesome widget!', 'text_domain' ), ) // Args
+			'Muffuletta_Form', // Base ID
+			__('Muffuletta Form', 'text_domain'), // Name
+			array( 'description' => __( 'A contact form for the Muffuletta theme', 'text_domain' ), ) // Args
 		);
 	}
 	/**
@@ -47,7 +47,17 @@ class My_Widget extends WP_Widget {
 		if ( ! empty( $instance['title'] ) ) {
 			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ). $args['after_title'];
 		}
-		echo __( 'Hello, World!', 'text_domain' );
+		echo "<form>
+		<label for='firstNameInput'>First Name</label>
+		<input type='text' name='firstNameInput' max-length='50'/>
+		<label for='lastNameInput'>Last Name</label>
+		<input type='text' name='lastNameInput' max-length='50'/>
+		<label for='emailInput'>Email</label>
+		<input type='text' name='emailInput' max-length='50'/>
+		<label for='messageInput'>Message</label>
+		<textarea name='messageInput' rows='4' cols='50'></textarea>
+		<input type='submit' name='send' value='send' />
+		</form>";
 		echo $args['after_widget'];
 	}
 	/**
