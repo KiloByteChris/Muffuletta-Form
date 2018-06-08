@@ -42,24 +42,39 @@ class Muffuletta_Form extends WP_Widget {
 	 * @param array $instance Saved values from database.
 	 */
 	public function widget( $args, $instance ) {
+		// add style
+		wp_enqueue_style('style', '/wp-content/plugins/muffuletta-form/css/style.css');
 		// Codex: https://codex.wordpress.org/Widgets_API#Example
      	echo $args['before_widget'];
 		if ( ! empty( $instance['title'] ) ) {
 			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ). $args['after_title'];
 		}
-		echo "<form>
+		echo "<form class='muffuletta-form' action=''>
 		<label for='firstNameInput'>First Name</label>
-		<input type='text' name='firstNameInput' max-length='50'/>
+		<input class='text-input' type='text' name='firstNameInput' max-length='50'/>
 		<label for='lastNameInput'>Last Name</label>
-		<input type='text' name='lastNameInput' max-length='50'/>
+		<input class='text-input' type='text' name='lastNameInput' max-length='50'/>
 		<label for='emailInput'>Email</label>
-		<input type='text' name='emailInput' max-length='50'/>
+		<input class='text-input' type='text' name='emailInput' max-length='50'/>
 		<label for='messageInput'>Message</label>
-		<textarea name='messageInput' rows='4' cols='50'></textarea>
-		<input type='submit' name='send' value='send' />
+		<textarea class='textarea-input' name='messageInput' rows='4' cols='50'></textarea>
+		<input id='submit-input' type='submit' name='send' value='Send' />
 		</form>";
+
 		echo $args['after_widget'];
-	}
+
+		//admin
+		// function muffuletta_admin_init() {
+		// 	echo 'hello';
+		// 	wp_register_style('admin-style', '/wp-content/plugins/muffuletta-form/css/admin.css');
+		// 	add_action('admin_print_styles', 'muffuletta_admin_style');
+		// 	function muffuletta_admin_style(){
+		// 		wp_enqueue_style('admin-style');
+		// 	}
+		// }
+		// add_action('admin_init', 'muffuletta_admin_init');
+		//
+		}
 	/**
 	 * Back-end widget form.
 	 *
