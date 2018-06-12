@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Muffuletta Form
-Plugin URI: http://new-volume.edu
+Plugin URI: http://new-volume.com
 Description: A contact form for the Muffuletta theme
 Author: chris@new-volume.com
 Version: 1.0
@@ -49,18 +49,63 @@ class Muffuletta_Form extends WP_Widget {
 		if ( ! empty( $instance['title'] ) ) {
 			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ). $args['after_title'];
 		}
-		echo "<form class='muffuletta-form' action=''>
-		<label for='firstNameInput'>First Name</label>
-		<input class='text-input' type='text' name='firstNameInput' max-length='50'/>
-		<label for='lastNameInput'>Last Name</label>
-		<input class='text-input' type='text' name='lastNameInput' max-length='50'/>
-		<label for='emailInput'>Email</label>
-		<input class='text-input' type='text' name='emailInput' max-length='50'/>
-		<label for='messageInput'>Message</label>
-		<textarea class='textarea-input' name='messageInput' rows='4' cols='50'></textarea>
-		<input id='submit-input' type='submit' name='send' value='Send' />
-		</form>";
-
+		// Display the form based on which form is selected
+		if( $instance['form-type'] == "contact-form") {
+			echo "<form class='muffuletta-form' action=''>
+			<label for='firstNameInput'>First Name</label>
+			<input class='text-input' type='text' name='firstNameInput' max-length='50'/>
+			<label for='lastNameInput'>Last Name</label>
+			<input class='text-input' type='text' name='lastNameInput' max-length='50'/>
+			<label for='emailInput'>Email</label>
+			<input class='text-input' type='text' name='emailInput' max-length='50'/>
+			<label for='messageInput'>Message</label>
+			<textarea class='textarea-input' name='messageInput' rows='4' cols='50'></textarea>
+			<input id='submit-input' type='submit' name='send' value='Send' />
+			</form>";
+		}elseif ($instance['form-type'] == "reservation-form")  {
+			echo "<form class='muffuletta-form' action=''>
+			<label for='firstNameInput'>First Name</label>
+			<input class='text-input' type='text' name='firstNameInput' max-length='50'/>
+			<label for='lastNameInput'>Last Name</label>
+			<input class='text-input' type='text' name='lastNameInput' max-length='50'/>
+			<label for='emailInput'>Email</label>
+			<input class='text-input' type='text' name='emailInput' max-length='50'/>
+			<label for='phoneInput'>Phone Number</label>
+			<input class='text-input' type='text' name='phoneInput' max-length='50'/>
+			<label for='dateInput'>Reservation Date</label>
+			<input class='text-input' type='text' name='dateInput' max-length='50'/>
+			<label for='timeInput'>Reservation Time</label>
+			<input class='text-input' type='text' name='timeInput' max-length='50'/>
+			<label for='partyNumberInput'>How many people?</label>
+			<select name='partyNumberInput'>
+				<option value='2'>
+				2
+				</option>
+				<option value='3'>
+				3
+				</option>
+				<option value='4'>
+				4
+				</option>
+				<option value='5'>
+				5
+				</option>
+			</select>
+			<input id='submit-input' type='submit' name='send' value='Make Reservation' />
+			</form>";
+		}elseif ($instance['form-type'] == "booking-form")  {
+			echo "<form class='muffuletta-form' action=''>
+			<label for='bandNameInput'>Band Name</label>
+			<input class='text-input' type='text' name='bandNameInput' max-length='50'/>
+			<label for='emailInput'>Email</label>
+			<input class='text-input' type='text' name='emailInput' max-length='50'/>
+			<label for='phoneInput'>Phone Number</label>
+			<input class='text-input' type='text' name='phoneInput' max-length='50'/>
+			<label for='dateInput'>Dates Available</label>
+			<input class='text-input' type='text' name='dateInput' max-length='50'/>
+			<input id='submit-input' type='submit' name='send' value='Request Booking' />
+			</form>";
+		}
 		echo $args['after_widget'];
 
 		//admin
@@ -94,6 +139,34 @@ class Muffuletta_Form extends WP_Widget {
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>">
 		</p>
+
+		<?php
+		if ( isset( $instance[ 'form-type' ] ) ) {
+		    $type = $instance[ 'form-type' ];
+		}
+		else {
+		    $type = __( 'Form Type', 'text_domain' );
+		}
+		?>
+		<p>
+		    <label for="<?php echo $this->get_field_id( 'form-type' ); ?>"><?php _e( 'Choose a form:' ); ?></label>
+		    <select class="widefat" id="<?php echo $this->get_field_id( 'form-type' ); ?>" name="<?php echo $this->get_field_name( 'form-type' ); ?>">
+		        <option value="<?php echo esc_attr('contact-form'); ?>">
+		            Contact Form
+		        </option>
+		        <option value="<?php echo esc_attr('reservation-form'); ?>">
+		            Reservation Form
+		        </option>
+		        <option value="<?php echo esc_attr('booking-form'); ?>">
+		            Booking Form
+		        </option>
+		    </select>
+		</p>
+		<p>
+			<input class="checkbox" type="checkbox" <?php checked( $instance[ 'form-type' ], 'on' ); ?> id="<?php echo $this->get_field_id( 'form-type' ); ?>" name="<?php echo $this->get_field_name( 'form-type' ); ?>" />
+	        <label for="<?php echo $this->get_field_id( 'form-type' ); ?>">Contact Form</label>
+		</p>
+
 		<?php
 	}
 	/**
@@ -109,6 +182,7 @@ class Muffuletta_Form extends WP_Widget {
 	public function update( $new_instance, $old_instance ) {
 		$instance = array();
 		$instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
+		$instance[ 'form-type' ] = strip_tags( $new_instance[ 'form-type' ] );
 		return $instance;
 	}
 } // class My_Widget
